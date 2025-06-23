@@ -1,4 +1,6 @@
 import { employees, type Employee, type InsertEmployee, type EmployeeStats } from "@shared/schema";
+import { db } from "./db";
+import { eq, ilike, or } from "drizzle-orm";
 
 export interface IStorage {
   getEmployee(id: number): Promise<Employee | undefined>;
@@ -10,6 +12,81 @@ export interface IStorage {
   getEmployeesByStatus(status: string): Promise<Employee[]>;
   searchEmployees(query: string): Promise<Employee[]>;
   getEmployeeStats(): Promise<EmployeeStats>;
+}
+
+export class DatabaseStorage implements IStorage {
+  async getEmployee(id: number): Promise<Employee | undefined> {
+    const [employee] = await db.select().from(employees).where(eq(employees.id, id));
+    return employee || undefined;
+  }
+
+  async getEmployeeByEmail(email: string): Promise<Employee | undefined> {
+    const [employee] = await db.select().from(employees).where(eq(employees.email, email));
+    return employee || undefined;
+  }
+
+  async createEmployee(insertEmployee: InsertEmployee): Promise<Employee> {
+    const [employee] = await db
+      .insert(employees)
+      .values({
+        ...insertEmployee,
+        employeeId: `EMP-${String(Math.floor(Math.random() * 10000)).padStart(3, '0')}`,
+      })
+      .returning();
+    return employee;
+  }
+
+  async updateEmployee(id: number, updateData: Partial<Employee>): Promise<Employee | undefined> {
+    const [employee] = await db
+      .update(employees)
+      .set(updateData)
+      .where(eq(employees.id, id))
+      .returning();
+    return employee || undefined;
+  }
+
+  async deleteEmployee(id: number): Promise<boolean> {
+    const result = await db.delete(employees).where(eq(employees.id, id));
+    return (result.rowCount || 0) > 0;
+  }
+
+  async getAllEmployees(): Promise<Employee[]> {
+    return await db.select().from(employees).orderBy(employees.fullName);
+  }
+
+  async getEmployeesByStatus(status: string): Promise<Employee[]> {
+    if (status === "all") return this.getAllEmployees();
+    return await db.select().from(employees).where(eq(employees.status, status));
+  }
+
+  async searchEmployees(query: string): Promise<Employee[]> {
+    return await db
+      .select()
+      .from(employees)
+      .where(
+        or(
+          ilike(employees.fullName, `%${query}%`),
+          ilike(employees.email, `%${query}%`),
+          ilike(employees.department, `%${query}%`),
+          ilike(employees.position, `%${query}%`)
+        )
+      );
+  }
+
+  async getEmployeeStats(): Promise<EmployeeStats> {
+    const allEmployees = await this.getAllEmployees();
+    const totalEmployees = allEmployees.length;
+    const presentToday = allEmployees.filter(emp => emp.status === "Present").length;
+    const onLeave = allEmployees.filter(emp => emp.status === "Leave").length;
+    const absent = allEmployees.filter(emp => emp.status === "Absent").length;
+
+    return {
+      totalEmployees,
+      presentToday,
+      onLeave,
+      absent,
+    };
+  }
 }
 
 export class MemStorage implements IStorage {
@@ -185,4 +262,4 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage();
+export const storage = new DatabaseStorage();
