@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { X, Edit, Mail, FileText, Save, XCircle } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -48,18 +48,20 @@ export function EmployeeDetailsModal({ employeeId, isOpen, onClose }: EmployeeDe
   });
 
   // Update form when employee data loads
-  if (employee && !isLoading) {
-    form.reset({
-      fullName: employee.fullName || "",
-      email: employee.email || "",
-      phone: employee.phone || "",
-      department: employee.department || "",
-      position: employee.position || "",
-      status: employee.status as "Present" | "Absent" | "Leave",
-      hireDate: employee.hireDate || "",
-      manager: employee.manager || "",
-    });
-  }
+  useEffect(() => {
+    if (employee && !isLoading) {
+      form.reset({
+        fullName: employee.fullName || "",
+        email: employee.email || "",
+        phone: employee.phone || "",
+        department: employee.department || "",
+        position: employee.position || "",
+        status: employee.status as "Present" | "Absent" | "Leave",
+        hireDate: employee.hireDate || "",
+        manager: employee.manager || "",
+      });
+    }
+  }, [employee, isLoading, form]);
 
   const updateEmployeeMutation = useMutation({
     mutationFn: async (data: any) => {
