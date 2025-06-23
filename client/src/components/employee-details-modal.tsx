@@ -64,16 +64,16 @@ export function EmployeeDetailsModal({ employeeId, isOpen, onClose }: EmployeeDe
               {/* Employee Profile Section */}
               <div className="flex items-center space-x-4 mb-6">
                 <div className="w-20 h-20 bg-[hsl(216,90%,26%)] text-white rounded-full flex items-center justify-center text-2xl font-bold">
-                  {getInitials(employee.fullName)}
+                  {getInitials(employee.fullName || "")}
                 </div>
                 <div>
                   <h4 className="text-xl font-semibold text-gray-900 dark:text-white">
-                    {employee.fullName}
+                    {employee.fullName || "Unknown Employee"}
                   </h4>
-                  <p className="text-gray-600 dark:text-gray-400">{employee.position}</p>
+                  <p className="text-gray-600 dark:text-gray-400">{employee.position || "No Position"}</p>
                   <div className="flex items-center mt-2">
-                    <span className={getStatusBadgeClasses(employee.status)}>
-                      {employee.status}
+                    <span className={getStatusBadgeClasses(employee.status || "")}>
+                      {employee.status || "Unknown"}
                     </span>
                   </div>
                 </div>

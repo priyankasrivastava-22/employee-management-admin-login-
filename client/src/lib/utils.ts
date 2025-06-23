@@ -6,6 +6,9 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function getInitials(name: string): string {
+  if (!name || typeof name !== 'string') {
+    return 'NA';
+  }
   return name
     .split(" ")
     .map(n => n[0])
