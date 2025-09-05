@@ -106,7 +106,7 @@ The application will be available at `http://localhost:5000`
 ## 5. Tech Stack
 - **Frontend**: React, TypeScript, Tailwind CSS, Wouter (routing)
 - **Backend**: Express.js, TypeScript
-- **Database**: PostgreSQL with Drizzle ORM
+- **Database**: PostgreSQL with Drizzle ORM(CLOUD NEON)
 - **UI Components**: Shadcn/ui
 - **Build Tool**: Vite
 

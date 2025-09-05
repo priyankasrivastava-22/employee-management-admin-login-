@@ -41,7 +41,7 @@ export function EmployeeDetailsModal({ employeeId, isOpen, onClose }: EmployeeDe
       phone: "",
       department: "",
       position: "",
-      status: "Present" as const,
+      status: "Present" as "Present" | "Absent" | "Leave", // <-- allow all
       hireDate: "",
       manager: "",
     },
@@ -50,13 +50,16 @@ export function EmployeeDetailsModal({ employeeId, isOpen, onClose }: EmployeeDe
   // Update form when employee data loads
   useEffect(() => {
     if (employee && !isLoading) {
+      const statusMap = ["Present", "Absent", "Leave"]; 
       form.reset({
         fullName: employee.fullName || "",
         email: employee.email || "",
         phone: employee.phone || "",
         department: employee.department || "",
         position: employee.position || "",
-        status: employee.status as "Present" | "Absent" | "Leave",
+        status: ["Present", "Absent", "Leave"].includes(employee.status) 
+        ? (employee.status as "Present" | "Absent" | "Leave")
+        : "Present",
         hireDate: employee.hireDate || "",
         manager: employee.manager || "",
       });
