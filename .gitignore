@@ -2,7 +2,11 @@ node_modules
 dist
 .DS_Store
 server/public
-vite.config.ts.*
-*.tar.gz
+.vite.config.ts
+.tar.gz
 setup.md
 .env
+.package-lock.json
+.replit
+.README.md
+client.zip
