@@ -8,5 +8,6 @@ setup.md
 .env
 .package-lock.json
 .replit
-.README.md
+setup-local.js
 client.zip
+*.log
