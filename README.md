@@ -26,8 +26,11 @@ The system supports employee records, department management, attendance tracking
 ## 4. Tech Stack
 
 -**Frontend** -  React.js, TypeScript, Tailwind CSS, Vite
+
 -**Backend** -Node.js, Express.js,RESTful APIs
+
 -**Database** - MySQL (Relational Database)
+
 -**DevOps & Cloud** - Git & GitHub (Version Control), Git Bash (CLI workflow), Render (Cloud Deployment),CI/CD via GitHub → Render auto-
 
 ## 5. System Architecture
